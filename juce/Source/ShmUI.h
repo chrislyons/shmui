@@ -16,6 +16,8 @@
     - BarVisualizer: Frequency band display with state animations
     - OrbVisualizer: OpenGL shader-based 3D orb
     - MatrixDisplay: LED-style matrix display with animations
+    - AudioPlayerControls: Transport controls (play/pause, time, speed)
+    - ScrubBar: Timeline scrub bar for position control
 
     Usage:
     1. Include this header in your JUCE project
@@ -41,6 +43,8 @@
 #include "Components/BarVisualizer.h"
 #include "Components/OrbVisualizer.h"
 #include "Components/MatrixDisplay.h"
+#include "Components/AudioPlayerControls.h"
+#include "Components/ScrubBar.h"
 
 // Utilities
 #include "Utils/Interpolation.h"
