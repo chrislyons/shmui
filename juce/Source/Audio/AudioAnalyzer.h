@@ -250,6 +250,10 @@ private:
     // Thread synchronization
     mutable juce::SpinLock dataLock;
 
+    // Pre-allocated buffer for mono mixdown (avoids allocation on audio thread)
+    std::vector<float> monoMixBuffer;
+    int monoMixBufferSize = 0;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioAnalyzer)
 };
 

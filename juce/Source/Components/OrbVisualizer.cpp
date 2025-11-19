@@ -334,10 +334,11 @@ void OrbVisualizer::renderOpenGL()
                        currentColor2.getFloatGreen(),
                        currentColor2.getFloatBlue());
 
-    // Set offsets array
-    if (auto* offsetsUniform = shader->getUniformIDFromName("uOffsets[0]"))
+    // Set offsets array - use glGetUniformLocation directly for array uniforms
+    GLint offsetsLocation = openGLContext.extensions.glGetUniformLocation(shader->getProgramID(), "uOffsets");
+    if (offsetsLocation >= 0)
     {
-        glUniform1fv(offsetsUniform->uniformID, 7, offsets.data());
+        glUniform1fv(offsetsLocation, 7, offsets.data());
     }
 
     // Bind texture

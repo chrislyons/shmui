@@ -88,15 +88,23 @@ void AudioAnalyzer::processBlock(const juce::AudioBuffer<float>& buffer)
     }
     else
     {
-        // Mix down to mono
-        std::vector<float> monoBuffer(numSamples, 0.0f);
+        // Ensure pre-allocated buffer is large enough
+        // Note: This allocation only happens once when buffer size increases
+        if (numSamples > monoMixBufferSize)
+        {
+            monoMixBuffer.resize(numSamples);
+            monoMixBufferSize = numSamples;
+        }
+
+        // Clear and mix down to mono
+        std::fill(monoMixBuffer.begin(), monoMixBuffer.begin() + numSamples, 0.0f);
 
         for (int ch = 0; ch < numChannels; ++ch)
         {
             const float* channelData = buffer.getReadPointer(ch);
             for (int i = 0; i < numSamples; ++i)
             {
-                monoBuffer[i] += channelData[i];
+                monoMixBuffer[i] += channelData[i];
             }
         }
 
@@ -104,10 +112,10 @@ void AudioAnalyzer::processBlock(const juce::AudioBuffer<float>& buffer)
         const float scale = 1.0f / static_cast<float>(numChannels);
         for (int i = 0; i < numSamples; ++i)
         {
-            monoBuffer[i] *= scale;
+            monoMixBuffer[i] *= scale;
         }
 
-        pushSamples(monoBuffer.data(), numSamples);
+        pushSamples(monoMixBuffer.data(), numSamples);
     }
 }
 

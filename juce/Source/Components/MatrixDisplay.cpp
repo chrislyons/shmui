@@ -10,6 +10,7 @@
 */
 
 #include "MatrixDisplay.h"
+#include <set>
 
 namespace shmui
 {
