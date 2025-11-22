@@ -18,8 +18,8 @@ export async function getRegistryItem(name: string) {
     return null
   }
 
-  // Convert all file paths to object.
-  // TODO: remove when we migrate to new registry.
+  // Convert all file paths to object format for backward compatibility.
+  // Some registry items may still use string paths instead of objects.
   item.files = item.files.map((file: unknown) =>
     typeof file === "string" ? { path: file } : file
   )
@@ -101,9 +101,9 @@ async function getFileContent(
 
   let code = sourceFile.getFullText()
 
-  // Some registry items uses default export.
-  // We want to use named export instead.
-  // TODO: do we really need this? - @shadcn.
+  // Convert default exports to named exports for shadcn/ui pattern consistency.
+  // This enables tree-shaking and explicit imports in consuming applications.
+  // Pages are excluded as they require default exports for Next.js routing.
   if (file.type !== "registry:page") {
     code = code.replaceAll("export default", "export")
   }

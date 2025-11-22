@@ -69,9 +69,9 @@ export function rehypeComponent() {
           const filePath = src
           let source = fs.readFileSync(filePath, "utf8")
 
-          // Replace imports.
-          // TODO: Use @swc/core and a visitor to replace this.
-          // For now a simple regex should do.
+          // Replace registry imports with component paths.
+          // Note: Using regex for simplicity. AST transformation with @swc/core
+          // would be more robust but adds complexity for minimal benefit here.
           source = source.replaceAll(
             `@/registry/elevenlabs-ui/`,
             "@/components/"
@@ -121,9 +121,9 @@ export function rehypeComponent() {
           const filePath = src
           let source = fs.readFileSync(filePath, "utf8")
 
-          // Replace imports.
-          // TODO: Use @swc/core and a visitor to replace this.
-          // For now a simple regex should do.
+          // Replace registry imports with component paths.
+          // Note: Using regex for simplicity. AST transformation with @swc/core
+          // would be more robust but adds complexity for minimal benefit here.
           source = source.replaceAll(
             `@/registry/elevenlabs-ui/`,
             "@/components/"

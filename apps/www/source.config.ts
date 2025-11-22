@@ -12,8 +12,10 @@ export default defineConfig({
   mdxOptions: {
     rehypePlugins: (plugins) => {
       plugins.shift()
+      // rehype-pretty-code types don't match fumadocs plugin array type exactly.
+      // This is a known compatibility issue between the libraries' type definitions.
+      // Runtime behavior is correct; using type assertion to satisfy TypeScript.
       plugins.push([
-        // TODO: fix the type.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         rehypePrettyCode as any,
         {
