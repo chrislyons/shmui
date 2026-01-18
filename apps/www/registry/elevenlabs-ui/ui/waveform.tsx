@@ -11,19 +11,25 @@ import {
 
 import { cn } from "@/lib/utils"
 
-export type WaveformProps = HTMLAttributes<HTMLDivElement> & {
-  data?: number[]
-  barWidth?: number
-  barHeight?: number
-  barGap?: number
-  barRadius?: number
-  barColor?: string
-  fadeEdges?: boolean
-  fadeWidth?: number
-  height?: string | number
-  active?: boolean
-  onBarClick?: (index: number, value: number) => void
-}
+import { createAudioAnalyser } from "../lib/audio"
+import { clamp, seededRandom } from "../lib/math"
+import type { WaveformBarConfig } from "../lib/types"
+
+export type WaveformProps = HTMLAttributes<HTMLDivElement> &
+  WaveformBarConfig & {
+    /** Data array for waveform visualization */
+    data?: number[]
+    /** Enable fade effect at edges */
+    fadeEdges?: boolean
+    /** Width of edge fade effect in pixels */
+    fadeWidth?: number
+    /** Height of the waveform container */
+    height?: string | number
+    /** Whether the waveform is actively playing */
+    active?: boolean
+    /** Callback when a bar is clicked */
+    onBarClick?: (index: number, value: number) => void
+  }
 
 export const Waveform = ({
   data = [],

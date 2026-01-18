@@ -5,41 +5,16 @@ import { useEffect, useMemo, useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
 
-export interface AudioAnalyserOptions {
-  fftSize?: number
-  smoothingTimeConstant?: number
-  minDecibels?: number
-  maxDecibels?: number
-}
+import { createAudioAnalyser, hasSignificantChange } from "../lib/audio"
+import { normalizeDb } from "../lib/math"
+import type {
+  AgentState,
+  AudioAnalyserOptions,
+  MultiBandVolumeOptions,
+} from "../lib/types"
+import { DEFAULT_MULTIBAND_OPTIONS } from "../lib/types"
 
-function createAudioAnalyser(
-  mediaStream: MediaStream,
-  options: AudioAnalyserOptions = {}
-) {
-  const audioContext = new (window.AudioContext ||
-    (window as unknown as { webkitAudioContext: typeof AudioContext })
-      .webkitAudioContext)()
-  const source = audioContext.createMediaStreamSource(mediaStream)
-  const analyser = audioContext.createAnalyser()
-
-  if (options.fftSize) analyser.fftSize = options.fftSize
-  if (options.smoothingTimeConstant !== undefined) {
-    analyser.smoothingTimeConstant = options.smoothingTimeConstant
-  }
-  if (options.minDecibels !== undefined)
-    analyser.minDecibels = options.minDecibels
-  if (options.maxDecibels !== undefined)
-    analyser.maxDecibels = options.maxDecibels
-
-  source.connect(analyser)
-
-  const cleanup = () => {
-    source.disconnect()
-    audioContext.close()
-  }
-
-  return { analyser, audioContext, cleanup }
-}
+export type { AgentState, AudioAnalyserOptions }
 
 /**
  * Hook for tracking the volume of an audio stream using the Web Audio API.
@@ -116,30 +91,7 @@ export function useAudioVolume(
   return volume
 }
 
-export interface MultiBandVolumeOptions {
-  bands?: number
-  loPass?: number // Low frequency cutoff
-  hiPass?: number // High frequency cutoff
-  updateInterval?: number // Update interval in ms
-  analyserOptions?: AudioAnalyserOptions
-}
-
-const multibandDefaults: MultiBandVolumeOptions = {
-  bands: 5,
-  loPass: 100,
-  hiPass: 600,
-  updateInterval: 32,
-  analyserOptions: { fftSize: 2048 },
-}
-
-// Memoized normalization function to avoid recreating on each render
-const normalizeDb = (value: number) => {
-  if (value === -Infinity) return 0
-  const minDb = -100
-  const maxDb = -10
-  const db = 1 - (Math.max(minDb, Math.min(maxDb, value)) * -1) / 100
-  return Math.sqrt(db)
-}
+export type { MultiBandVolumeOptions }
 
 /**
  * Hook for tracking volume across multiple frequency bands
@@ -152,7 +104,7 @@ export function useMultibandVolume(
   options: MultiBandVolumeOptions = {}
 ) {
   const opts = useMemo(
-    () => ({ ...multibandDefaults, ...options }),
+    () => ({ ...DEFAULT_MULTIBAND_OPTIONS, ...options }),
     [
       options.bands,
       options.loPass,
@@ -216,19 +168,10 @@ export function useMultibandVolume(
         }
 
         // Only update state if bands changed significantly
-        let hasChanged = false
-        for (let i = 0; i < chunks.length; i++) {
-          if (Math.abs(chunks[i] - bandsRef.current[i]) > 0.01) {
-            hasChanged = true
-            break
-          }
-        }
-
-        if (hasChanged) {
+        if (hasSignificantChange(chunks, bandsRef.current)) {
           bandsRef.current = chunks
           setFrequencyBands(chunks)
         }
-
         lastUpdate = timestamp
       }
 
@@ -324,13 +267,6 @@ const generateListeningSequenceBar = (columns: number): number[][] => {
   const noIndex = -1
   return [[center], [noIndex]]
 }
-
-export type AgentState =
-  | "connecting"
-  | "initializing"
-  | "listening"
-  | "speaking"
-  | "thinking"
 
 export interface BarVisualizerProps
   extends React.HTMLAttributes<HTMLDivElement> {
