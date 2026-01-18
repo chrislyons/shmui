@@ -5,7 +5,10 @@ import { useTexture } from "@react-three/drei"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import * as THREE from "three"
 
-export type AgentState = null | "thinking" | "listening" | "talking"
+import { clamp01, splitmix32 } from "../lib/math"
+import type { OrbAgentState } from "../lib/types"
+
+export type AgentState = OrbAgentState
 
 type OrbProps = {
   colors?: [string, string]
@@ -263,22 +266,6 @@ function Scene({
   )
 }
 
-function splitmix32(a: number) {
-  return function () {
-    a |= 0
-    a = (a + 0x9e3779b9) | 0
-    let t = a ^ (a >>> 16)
-    t = Math.imul(t, 0x21f0aaad)
-    t = t ^ (t >>> 15)
-    t = Math.imul(t, 0x735a2d97)
-    return ((t = t ^ (t >>> 15)) >>> 0) / 4294967296
-  }
-}
-
-function clamp01(n: number) {
-  if (!Number.isFinite(n)) return 0
-  return Math.min(1, Math.max(0, n))
-}
 const vertexShader = /* glsl */ `
 uniform float uTime;
 uniform sampler2D uPerlinTexture;

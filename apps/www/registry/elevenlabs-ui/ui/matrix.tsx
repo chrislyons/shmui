@@ -5,7 +5,11 @@ import { useEffect, useMemo, useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
 
-export type Frame = number[][]
+import { clamp } from "../lib/math"
+import type { Frame } from "../lib/types"
+
+export type { Frame }
+
 type MatrixMode = "default" | "vu"
 
 interface CellPosition {
@@ -32,10 +36,6 @@ interface MatrixProps extends React.HTMLAttributes<HTMLDivElement> {
   onFrame?: (index: number) => void
   mode?: MatrixMode
   levels?: number[]
-}
-
-function clamp(value: number): number {
-  return Math.max(0, Math.min(1, value))
 }
 
 function ensureFrameSize(frame: Frame, rows: number, cols: number): Frame {
