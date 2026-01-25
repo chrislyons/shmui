@@ -40,6 +40,8 @@ Button::Button()
     setMouseCursor(juce::MouseCursor::PointingHandCursor);
 }
 
+Button::~Button() = default;
+
 //==============================================================================
 void Button::setStyle(ButtonStyle style)
 {
