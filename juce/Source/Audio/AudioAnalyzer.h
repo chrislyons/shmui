@@ -62,6 +62,9 @@ public:
     static constexpr float kMinDb = -100.0f;
     static constexpr float kMaxDb = -10.0f;
 
+    /** Maximum expected buffer size for pre-allocation (avoids audio thread allocation) */
+    static constexpr int kMaxBufferSize = 8192;
+
     //==============================================================================
 
     /**
@@ -251,8 +254,8 @@ private:
     mutable juce::SpinLock dataLock;
 
     // Pre-allocated buffer for mono mixdown (avoids allocation on audio thread)
-    std::vector<float> monoMixBuffer;
-    int monoMixBufferSize = 0;
+    // Buffer is pre-sized in constructor to kMaxBufferSize
+    std::vector<float> monoMixBuffer{kMaxBufferSize, 0.0f};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioAnalyzer)
 };

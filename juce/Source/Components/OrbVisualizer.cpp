@@ -231,7 +231,7 @@ OrbVisualizer::~OrbVisualizer()
     openGLContext.detach();
 }
 
-void OrbVisualizer::setAgentState(OrbAgentState state)
+void OrbVisualizer::setAgentState(AgentState state)
 {
     agentState = state;
 }
@@ -443,22 +443,22 @@ void OrbVisualizer::updateAnimationTargets()
 
     switch (agentState)
     {
-        case OrbAgentState::None:
+        case AgentState::Idle:
             targetInput = 0.0f;
             targetOutput = 0.3f;
             break;
 
-        case OrbAgentState::Listening:
+        case AgentState::Listening:
             targetInput = Interpolation::clamp01(0.55f + std::sin(t * 3.2f) * 0.35f);
             targetOutput = 0.45f;
             break;
 
-        case OrbAgentState::Talking:
+        case AgentState::Speaking:  // "talking" in React orb.tsx
             targetInput = Interpolation::clamp01(0.65f + std::sin(t * 4.8f) * 0.22f);
             targetOutput = Interpolation::clamp01(0.75f + std::sin(t * 3.6f) * 0.22f);
             break;
 
-        case OrbAgentState::Thinking:
+        case AgentState::Thinking:
         {
             const float base = 0.38f + 0.07f * std::sin(t * 0.7f);
             const float wander = 0.05f * std::sin(t * 2.1f) * std::sin(t * 0.37f + 1.2f);
@@ -466,6 +466,13 @@ void OrbVisualizer::updateAnimationTargets()
             targetOutput = Interpolation::clamp01(0.48f + 0.12f * std::sin(t * 1.05f + 0.6f));
             break;
         }
+
+        case AgentState::Connecting:
+        case AgentState::Initializing:
+            // Treat connecting/initializing like thinking
+            targetInput = Interpolation::clamp01(0.38f + 0.07f * std::sin(t * 0.7f));
+            targetOutput = Interpolation::clamp01(0.48f + 0.12f * std::sin(t * 1.05f + 0.6f));
+            break;
     }
 }
 

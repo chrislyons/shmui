@@ -26,6 +26,20 @@ type OrbProps = {
   className?: string
 }
 
+// Generate accessible label based on agent state
+const getOrbAriaLabel = (state: AgentState): string => {
+  switch (state) {
+    case "thinking":
+      return "Animated orb visualization - processing"
+    case "listening":
+      return "Animated orb visualization - listening for input"
+    case "talking":
+      return "Animated orb visualization - speaking"
+    default:
+      return "Animated orb visualization - idle"
+  }
+}
+
 export function Orb({
   colors = ["#CADCFC", "#A0B9D1"],
   colorsRef,
@@ -42,7 +56,11 @@ export function Orb({
   className,
 }: OrbProps) {
   return (
-    <div className={className ?? "relative h-full w-full"}>
+    <div
+      className={className ?? "relative h-full w-full"}
+      role="img"
+      aria-label={getOrbAriaLabel(agentState)}
+    >
       <Canvas
         resize={{ debounce: resizeDebounce }}
         gl={{

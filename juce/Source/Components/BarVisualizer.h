@@ -14,23 +14,11 @@
 
 #include <JuceHeader.h>
 #include "../Audio/AudioAnalyzer.h"
+#include "../Utils/AgentState.h"
 #include <vector>
 
 namespace shmui
 {
-
-/**
- * @brief Agent state for bar visualizer animations.
- */
-enum class AgentState
-{
-    Idle,           ///< Inactive state
-    Connecting,     ///< Initial connection animation
-    Initializing,   ///< Setup animation
-    Listening,      ///< Listening for input
-    Thinking,       ///< Processing/thinking
-    Speaking        ///< Output/speaking
-};
 
 /**
  * @brief Multi-band frequency visualizer with state animations.
@@ -160,9 +148,9 @@ private:
     juce::Colour highlightColour = juce::Colour(0xFF3B82F6);  // primary
     juce::Colour backgroundColour = juce::Colour(0xFFF5F5F5);  // muted
 
-    // Frequency band configuration
+    // Frequency band configuration (matches AudioAnalyzer defaults and React)
     static constexpr int kLoPass = 100;
-    static constexpr int kHiPass = 200;
+    static constexpr int kHiPass = 600;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BarVisualizer)
 };
