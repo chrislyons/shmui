@@ -45,10 +45,10 @@ shmui/
 ├── juce/                  # JUCE C++ components (synced to orpheus-sdk)
 │   └── Source/
 │       ├── ShmUI.h        # Main include header
-│       ├── Audio/         # AudioAnalyzer (FFT, RMS)
-│       ├── Components/    # Visualizers (Orb, Waveform, Bar, Matrix)
-│       ├── Shaders/       # OpenGL shaders
-│       └── Utils/         # Interpolation, ColorUtils
+│       ├── Audio/         # AudioAnalyzer (FFT, RMS, lock-free)
+│       ├── Components/    # Visualizers, Controls (Orb, Waveform, Bar, Matrix, ScrubBar)
+│       ├── Shaders/       # OpenGL shaders (OrbVertex, OrbFragment)
+│       └── Utils/         # AgentState, Interpolation, ColorUtils
 ├── apps/                  # Example apps
 ├── docs/                  # Documentation
 └── tests/                 # Component tests

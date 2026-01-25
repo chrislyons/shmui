@@ -124,16 +124,29 @@ void timerCallback() override {
 
 ### Available JUCE Components
 
-- **AudioAnalyzer** - FFT, RMS, frequency band analysis (thread-safe)
+**Audio Analysis:**
+- **AudioAnalyzer** - FFT, RMS, frequency band analysis (thread-safe, lock-free)
+
+**Visualizers:**
 - **WaveformVisualizer** - Multiple waveform display variants
 - **BarVisualizer** - Frequency band display with state animations
 - **OrbVisualizer** - OpenGL shader-based 3D orb
 - **MatrixDisplay** - LED-style matrix display with animations
 
-**Important:**
-- `AudioAnalyzer` is thread-safe for audio/UI communication
-- Visualization components must be used on the message thread
+**Controls:**
+- **AudioPlayerControls** - Transport controls (play/pause, time, speed)
+- **ScrubBar** - Timeline scrub bar for position control
+
+**Utilities:**
+- **AgentState** - Unified agent state enum (Idle, Connecting, Initializing, Listening, Thinking, Speaking)
+- **Interpolation** - Smoothing and easing utilities
+- **ColorUtils** - Color manipulation helpers
+
+**Threading Model:**
+- `AudioAnalyzer` is thread-safe (lock-free atomics for audio/UI communication)
+- Visualization components must be used on JUCE message thread
 - Use `juce::MessageManager::callAsync()` for cross-thread updates
+- NO allocations on audio thread (Orpheus SDK compatible)
 
 ---
 
