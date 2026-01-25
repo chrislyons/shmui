@@ -4,9 +4,9 @@ Documentation for the Shmui project—dual-stack UI components for audio & agent
 
 ## Recent Documents
 
+- [[SHM005 Gap Analysis Implementation Report]] - Phase 0-2 component implementation (Icons, Buttons, Visualizers)
 - [[SHM004 Shmui Analysis Roadmap]] - Codebase analysis and development roadmap
 - [[SHM003 SDK Integration Recommendation]]
-- [[SHM002 Shmui-Orpheus Agent Handoff]]
 
 ## All Documents
 
@@ -16,6 +16,7 @@ Documentation for the Shmui project—dual-stack UI components for audio & agent
 - [[SHM002 Shmui-Orpheus Agent Handoff]] - Handoff architecture with Orpheus SDK
 - [[SHM003 SDK Integration Recommendation]] - Final SDK integration recommendation
 - [[SHM004 Shmui Analysis Roadmap]] - Codebase analysis and development roadmap
+- [[SHM005 Gap Analysis Implementation Report]] - Phase 0-2 component implementation (Icons, Buttons, Visualizers)
 
 ## Navigation
 
