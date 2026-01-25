@@ -444,22 +444,37 @@ const BarVisualizerComponent = React.forwardRef<
       [demo, fakeVolumeBands, realVolumeBands]
     )
 
-    // Animation sequencing
+    // Animation sequencing - interval based on state
+    const getAnimationInterval = (state: AgentState | undefined): number => {
+      switch (state) {
+        case "connecting":
+          return 2000 / barCount
+        case "thinking":
+          return 150
+        case "listening":
+          return 500
+        default:
+          return 1000
+      }
+    }
+
     const highlightedIndices = useBarAnimator(
       state,
       barCount,
-      state === "connecting"
-        ? 2000 / barCount
-        : state === "thinking"
-          ? 150
-          : state === "listening"
-            ? 500
-            : 1000
+      getAnimationInterval(state)
     )
+
+    // Generate accessible label based on state
+    const getAriaLabel = (): string => {
+      const stateLabel = state ? `${state} state` : "idle"
+      return `Audio visualization showing ${stateLabel}`
+    }
 
     return (
       <div
         ref={ref}
+        role="img"
+        aria-label={getAriaLabel()}
         data-state={state}
         className={cn(
           "relative flex justify-center gap-1.5",
@@ -517,6 +532,19 @@ const Bar = React.memo<{
 
 Bar.displayName = "Bar"
 
+// Shallow compare style objects to avoid JSON.stringify overhead
+const shallowEqualStyle = (
+  a: React.CSSProperties | undefined,
+  b: React.CSSProperties | undefined
+): boolean => {
+  if (a === b) return true
+  if (!a || !b) return a === b
+  const keysA = Object.keys(a) as (keyof React.CSSProperties)[]
+  const keysB = Object.keys(b) as (keyof React.CSSProperties)[]
+  if (keysA.length !== keysB.length) return false
+  return keysA.every((key) => a[key] === b[key])
+}
+
 // Wrap the main component with React.memo for prop comparison optimization
 const BarVisualizer = React.memo(
   BarVisualizerComponent,
@@ -530,7 +558,7 @@ const BarVisualizer = React.memo(
       prevProps.demo === nextProps.demo &&
       prevProps.centerAlign === nextProps.centerAlign &&
       prevProps.className === nextProps.className &&
-      JSON.stringify(prevProps.style) === JSON.stringify(nextProps.style)
+      shallowEqualStyle(prevProps.style, nextProps.style)
     )
   }
 )

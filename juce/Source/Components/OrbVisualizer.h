@@ -13,21 +13,11 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "../Utils/AgentState.h"
 #include "../Utils/Interpolation.h"
 
 namespace shmui
 {
-
-/**
- * @brief Agent state for orb animations.
- */
-enum class OrbAgentState
-{
-    None,       ///< Idle state
-    Thinking,   ///< Processing/thinking
-    Listening,  ///< Listening for input
-    Talking     ///< Speaking/output
-};
 
 /**
  * @brief Volume control mode for orb.
@@ -59,12 +49,12 @@ public:
     /**
      * @brief Set the agent state for animation.
      */
-    void setAgentState(OrbAgentState state);
+    void setAgentState(AgentState state);
 
     /**
      * @brief Get current agent state.
      */
-    OrbAgentState getAgentState() const { return agentState; }
+    AgentState getAgentState() const { return agentState; }
 
     //==============================================================================
     // Volume Control
@@ -149,7 +139,7 @@ private:
     GLuint texCoordBuffer = 0;
 
     // State
-    OrbAgentState agentState = OrbAgentState::None;
+    AgentState agentState = AgentState::Idle;
     OrbVolumeMode volumeMode = OrbVolumeMode::Auto;
 
     // Volume

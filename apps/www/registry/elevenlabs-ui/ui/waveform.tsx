@@ -152,6 +152,8 @@ export const Waveform = ({
     <div
       className={cn("relative", className)}
       ref={containerRef}
+      role="img"
+      aria-label="Audio waveform display"
       style={{ height: heightStyle }}
       {...props}
     >
@@ -368,6 +370,8 @@ export const ScrollingWaveform = ({
     <div
       className={cn("relative flex items-center", className)}
       ref={containerRef}
+      role="img"
+      aria-label="Scrolling audio waveform display"
       style={{ height: heightStyle }}
       {...props}
     >

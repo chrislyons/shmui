@@ -28,6 +28,9 @@
     - Visualization components should be used on the message thread
     - Use juce::MessageManager::callAsync for cross-thread updates
 
+    Sync to Orpheus SDK:
+    rsync -av --delete ~/dev/shmui/juce/Source/ ~/dev/orpheus-sdk/packages/shmui-juce/
+
   ==============================================================================
 */
 
@@ -43,6 +46,7 @@
 #include "Components/MatrixDisplay.h"
 
 // Utilities
+#include "Utils/AgentState.h"
 #include "Utils/Interpolation.h"
 #include "Utils/ColorUtils.h"
 
